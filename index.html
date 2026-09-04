@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vista: Situated Visual Modality Adaptation for Spoken VLM Responses in XR</title>
+  <meta name="description" content="Vista delivers free-form VLM responses in XR with visual support adapted to each part of the response and synchronized with the narration.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --surface: #f5f5f7;
+      --text: #1d1d1f;
+      --text-secondary: #6e6e73;
+      --text-tertiary: #aeaeb2;
+      --accent: #0071e3;
+      --border: #e5e5e7;
+      --radius: 16px;
+      --max-width: 1080px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: 80px 0;
+    }
+
+    section + section {
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 100px 0 0;
+      text-align: center;
+      border-top: none;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(0, 113, 227, 0.08);
+      padding: 6px 16px;
+      border-radius: 99px;
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .hero .subtitle {
+      font-size: clamp(1rem, 2vw, 1.35rem);
+      font-weight: 400;
+      color: var(--text-secondary);
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .hero-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 18px;
+      border: 1px solid rgba(0, 113, 227, 0.18);
+      border-radius: 999px;
+      background: rgba(0, 113, 227, 0.06);
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.86rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .hero-link:hover {
+      background: rgba(0, 113, 227, 0.1);
+      transform: translateY(-1px);
+    }
+
+    /* ── Video Sections ── */
+    .video-section {
+      padding: 60px 0 80px;
+    }
+
+    .video-wrapper {
+      width: 100%;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #000;
+      aspect-ratio: 16 / 9;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .video-wrapper iframe,
+    .scenario-video iframe {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border: 0;
+    }
+
+    .video-caption {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: var(--text-tertiary);
+    }
+
+    .video-caption.video-caption-accent {
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── Section Headers ── */
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .section-desc {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      line-height: 1.7;
+    }
+
+    /* ── Abstract ── */
+    .abstract-content {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      width: 100%;
+      max-width: 100%;
+      line-height: 1.8;
+    }
+
+    /* ── Pipeline / System Overview ── */
+    .system-overview-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 616px) 320px;
+      gap: 34px;
+      justify-content: center;
+      align-items: start;
+      margin-top: 28px;
+    }
+
+    .system-overview-figure {
+      width: 100%;
+    }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 0;
+    }
+
+    .pipeline-step {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 8px 14px;
+      align-items: start;
+      background: var(--surface);
+      padding: 18px 18px 18px 16px;
+      text-align: left;
+      border-radius: 14px;
+      position: relative;
+    }
+
+    .pipeline-step .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 0;
+      grid-row: 1 / span 2;
+    }
+
+    .pipeline-step h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+      align-self: end;
+    }
+
+    .pipeline-step p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .system-overview-media {
+      width: 100%;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .system-overview-img {
+      margin-top: 0;
+      display: block;
+      transform: scale(1);
+      transform-origin: center;
+    }
+
+    .mapping-table {
+      display: grid;
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .modality-figure {
+      margin-top: 40px;
+    }
+
+    .modality-figure .figure-img {
+      margin-top: 0;
+      border: 1px solid var(--border);
+    }
+
+    .modality-figure h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .modality-figure .section-desc {
+      margin-bottom: 20px;
+    }
+
+    .mapping-row {
+      display: grid;
+      gap: 20px;
+      padding: 28px 24px 24px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: linear-gradient(180deg, #ffffff 0%, #fafafc 100%);
+      box-shadow: 0 12px 32px rgba(17, 24, 39, 0.04);
+      align-items: start;
+    }
+
+    .mapping-state {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px 16px;
+      align-items: center;
+    }
+
+    .mapping-state-badge {
+      display: inline-flex;
+      align-self: flex-start;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mapping-row.visible .mapping-state-badge {
+      background: #dbeefe;
+      color: #1d5fa8;
+    }
+
+    .mapping-row.absent .mapping-state-badge {
+      background: #dff3e1;
+      color: #2e7d32;
+    }
+
+    .mapping-row.abstract .mapping-state-badge {
+      background: #fdefd2;
+      color: #a3630a;
+    }
+
+    .mapping-state h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .mapping-state p {
+      grid-column: 1 / -1;
+      max-width: 860px;
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    .mapping-gallery {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .mapping-card {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(17, 24, 39, 0.03);
+    }
+
+    .mapping-card-image {
+      height: 220px;
+      padding: 10px;
+      background: linear-gradient(180deg, #f8f8fb 0%, #f2f3f7 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mapping-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .mapping-row.abstract .mapping-card-image {
+      height: auto;
+    }
+
+    .mapping-row.abstract .mapping-card-image img {
+      height: auto;
+      object-fit: initial;
+    }
+
+    /* ── Scenario Videos ── */
+    .scenario-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+      margin-top: 40px;
+    }
+
+    .scenario-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .scenario-item:nth-child(even) {
+      direction: rtl;
+    }
+
+    .scenario-item:nth-child(even) > * {
+      direction: ltr;
+    }
+
+    .scenario-video {
+      width: 100%;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #000;
+      aspect-ratio: 16 / 9;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .scenario-video video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .scenario-info h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .scenario-info p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    .scenario-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(0, 113, 227, 0.08);
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 48px 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 0.8rem;
+    }
+
+    /* ── Figure Images ── */
+    .figure-img {
+      width: 100%;
+      border-radius: var(--radius);
+      margin-top: 36px;
+    }
+
+    .figure-caption {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 0.82rem;
+      color: var(--text-tertiary);
+      line-height: 1.5;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      section { padding: 60px 0; }
+      .hero { padding: 60px 0 0; }
+
+      .scenario-item,
+      .scenario-item:nth-child(even) {
+        grid-template-columns: 1fr;
+        direction: ltr;
+      }
+
+      .system-overview-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .system-overview-figure {
+        max-width: 616px;
+        margin: 0 auto;
+      }
+
+      .mapping-gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .mapping-card-image {
+        height: 220px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .mapping-gallery {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ── Fade-in Animation ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">IEEE VR 2027 &middot; Under Review</div>
+      <h1>Vista</h1>
+      <p class="subtitle">Situated Visual Modality Adaptation<br>for Spoken VLM Responses in XR</p>
+      <div class="hero-actions">
+        <a class="hero-link" href="./Vista_IEEEVR2027.pdf" target="_blank" rel="noopener noreferrer">Paper (Under Review)</a>
+        <a class="hero-link" href="./Vista_IEEEVR2027_Supplement.pdf" target="_blank" rel="noopener noreferrer">Supplementary Material</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Demo Video -->
+  <section class="video-section" style="border-top: none; padding-top: 48px;">
+    <div class="container">
+      <div class="video-wrapper fade-in">
+        <iframe
+          id="main-demo-player"
+          class="youtube-embed"
+          data-video-id="sTqTd6ExhLM"
+          data-autoplay="true"
+          src="https://www.youtube.com/embed/sTqTd6ExhLM?enablejsapi=1&playsinline=1&controls=1&rel=0&mute=1&autoplay=1&loop=1&playlist=sTqTd6ExhLM"
+          title="System demonstration of Vista"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+      <p class="video-caption video-caption-accent">System demonstration of Vista</p>
+    </div>
+  </section>
+
+  <!-- Scenario Videos -->
+  <section>
+    <div class="container">
+      <div class="section-label fade-in">Scenario Demonstrations</div>
+      <h2 class="section-title fade-in">Full Scenario Videos</h2>
+      <p class="section-desc fade-in" style="max-width: 100%;">
+        Each scenario demonstrates Vista's end-to-end pipeline in a different real-world context.
+      </p>
+
+      <div class="scenario-grid">
+
+        <!-- Scenario 1: Art -->
+        <div class="scenario-item fade-in">
+          <div class="scenario-video">
+            <iframe
+              id="art-player"
+              class="youtube-embed"
+              data-video-id="Na4somc-s7w"
+              data-autoplay="false"
+              src="https://www.youtube.com/embed/Na4somc-s7w?enablejsapi=1&playsinline=1&controls=1&rel=0"
+              title="Art Explanation"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+          <div class="scenario-info">
+            <h3>Art Explanation</h3>
+            <p>Spatial highlights and keywords guide your gaze through the mural reproduction, helping you quickly see where to look and how the composition is organized. Web searched imagery and a generated panoramic view help you understand the original space where the work was painted.</p>
+          </div>
+        </div>
+
+        <!-- Scenario 2: Presentation -->
+        <div class="scenario-item fade-in">
+          <div class="scenario-video">
+            <iframe
+              id="presentation-player"
+              class="youtube-embed"
+              data-video-id="4_dUL9m2Zr0"
+              data-autoplay="false"
+              src="https://www.youtube.com/embed/4_dUL9m2Zr0?enablejsapi=1&playsinline=1&controls=1&rel=0"
+              title="Presentation Q&amp;A"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+          <div class="scenario-info">
+            <h3>Presentation Q&amp;A</h3>
+            <p>During a presentation about the Mars rover, you may want to go beyond what appears on the slide. You can inspect the visible parts, learn their roles, and bring on-the-fly generated power-management components into your space as a 3D object.</p>
+          </div>
+        </div>
+
+        <!-- Scenario 3: Machine -->
+        <div class="scenario-item fade-in">
+          <div class="scenario-video">
+            <iframe
+              id="machine-player"
+              class="youtube-embed"
+              data-video-id="bkuFP_LZeOw"
+              data-autoplay="false"
+              src="https://www.youtube.com/embed/bkuFP_LZeOw?enablejsapi=1&playsinline=1&controls=1&rel=0"
+              title="Machine Setup"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+          <div class="scenario-info">
+            <h3>Machine Setup</h3>
+            <p>If you are using a coffee machine for the first time, you can see which parts are needed at each step and where they should go through intuitive 3D arrows. If an off-screen item such as a cup is needed, you are shown the generated object and where it should be placed in the real world.</p>
+          </div>
+        </div>
+
+        <!-- Scenario 4: Shopping -->
+        <div class="scenario-item fade-in">
+          <div class="scenario-video">
+            <iframe
+              id="shopping-player"
+              class="youtube-embed"
+              data-video-id="GQIqrTRA5Ss"
+              data-autoplay="false"
+              src="https://www.youtube.com/embed/GQIqrTRA5Ss?enablejsapi=1&playsinline=1&controls=1&rel=0"
+              title="Product Comparison"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+          <div class="scenario-info">
+            <h3>Product Comparison</h3>
+            <p>While traveling abroad, you may want a tasty instant noodle that is not spicy. You can compare unfamiliar options by flavor profile and preview representative cooked bowls before you shop.</p>
+          </div>
+        </div>
+
+        <!-- Scenario 5: Matcha -->
+        <div class="scenario-item fade-in">
+          <div class="scenario-video">
+            <iframe
+              id="matcha-player"
+              class="youtube-embed"
+              data-video-id="PcSLJlKCzuk"
+              data-autoplay="false"
+              src="https://www.youtube.com/embed/PcSLJlKCzuk?enablejsapi=1&playsinline=1&controls=1&rel=0"
+              title="Matcha Brewing"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+          <div class="scenario-info">
+            <h3>Matcha Brewing</h3>
+            <p>As you follow a step-by-step matcha guide, spatial highlights direct your attention to the tools you need. A reference image shows the target froth texture, while keywords keep water temperature and ratios visible.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Abstract -->
+  <section>
+    <div class="container">
+      <div class="section-label fade-in">Abstract</div>
+      <p class="abstract-content fade-in">
+        We present Vista, an XR agent system that delivers free-form, information-rich VLM responses with adaptive visual support to improve comprehension and reduce cognitive load. A response can shift among visible objects, absent content, and abstract facts, requiring users to locate, imagine, and retain information while listening. Existing XR agents, however, typically deliver every response in one fixed visual form that supports only a single demand. To address this, we present situated visual modality adaptation, an approach that (i) adapts visual support as the demand changes within a response and (ii) synchronizes each cue with the narration. The key idea is to use the response&ndash;scene relation, i.e., how the described content relates to the user's physical surroundings, to select and generate matched visual support at run time. We performed a user study and interviews with a working prototype, and participants showed improved comprehension with lower workload compared to an audio-with-text baseline.
+      </p>
+    </div>
+  </section>
+
+  <!-- Approach -->
+  <section>
+    <div class="container">
+      <div class="section-label fade-in">Approach</div>
+      <h2 class="section-title fade-in">Situated Visual Modality Adaptation</h2>
+      <p class="section-desc fade-in" style="max-width: 100%;">
+        A single response can shift among visible objects, absent content, and abstract facts. Vista classifies each part of a response by its response&ndash;scene relation, how the described content relates to the user's physical surroundings, and selects matched visual support at run time. Visible content imposes a mental mapping demand, so spatial highlights guide the user's gaze to each described target. Absent content imposes a mental imagery demand, so a reference image externalizes what the user would otherwise have to imagine. Abstract content is difficult to retain, so pinned keywords keep names, dates, and terms in view.
+      </p>
+      <img class="figure-img fade-in" src="./images/Teaser.png" alt="Example operation of Vista on The Last Supper: spatial highlights, a reference image, and pinned keywords adapted to each comprehension demand">
+      <p class="figure-caption fade-in">Given a user's query and egocentric view (A), the VLM generates a free-form response (B). Vista generates visual support for three comprehension demands at run time (C): spatial highlights (D), a reference image (E), and pinned keywords (F).</p>
+    </div>
+  </section>
+
+  <!-- System Overview -->
+  <section>
+    <div class="container">
+      <div class="section-label fade-in">System Overview</div>
+      <h2 class="section-title fade-in">Run-Time Response Delivery</h2>
+      <p class="section-desc fade-in">
+        Vista transforms a free-form VLM response into a synchronized audio-visual presentation. The overview and its spoken gist arrive as soon as segmentation completes, and each segment becomes playable when its own assets are ready.
+      </p>
+      <div class="system-overview-layout fade-in">
+        <div class="system-overview-figure">
+          <div class="system-overview-media">
+            <img class="figure-img system-overview-img" src="./images/SystemOverviewShorten2.png" alt="System overview of Vista">
+          </div>
+          <p class="figure-caption">System overview of Vista.</p>
+        </div>
+        <div class="pipeline">
+          <div class="pipeline-step">
+            <div class="step-number">1</div>
+            <h4>Response Generator</h4>
+            <p>Produces a detailed response grounded in the user's egocentric view and speech query.</p>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-number">2</div>
+            <h4>Response Segmenter</h4>
+            <p>Splits the response at transitions of the response&ndash;scene relation and builds a navigable overview with a spoken gist.</p>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-number">3</div>
+            <h4>Modality Assigner</h4>
+            <p>Selects the base and extended visual modalities for each segment and extracts retention-critical keywords.</p>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-number">4</div>
+            <h4>Visual / Audio Modality Generator</h4>
+            <p>Generates visual assets in parallel and inserts timing marks and pauses into the narration via SSML.</p>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-number">5</div>
+            <h4>Audio-Visual Sync Manager</h4>
+            <p>Activates each visual cue on the client the moment the narration reaches its content.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modalities -->
+  <section>
+    <div class="container">
+      <div class="section-label fade-in">Visual Modalities</div>
+      <h2 class="section-title fade-in">Mapping Response&ndash;Scene Relations to Visual Support</h2>
+      <p class="section-desc fade-in">
+        Each segment carries one response&ndash;scene relation. A base modality serves its primary demand, and extended modalities cover needs the base alone does not.
+      </p>
+      <div class="mapping-table fade-in" aria-label="Mapping from response-scene relation to visual modalities">
+        <div class="mapping-row visible">
+          <div class="mapping-state">
+            <span class="mapping-state-badge">Visible</span>
+            <h3>In the user's current view</h3>
+            <p>Spatial highlights anchor a semi-transparent box to each described target. A 3D arrow traces motion or direction, such as a W-shaped whisking stroke, and keywords hold values like a scale reading.</p>
+          </div>
+        </div>
+
+        <div class="mapping-row absent">
+          <div class="mapping-state">
+            <span class="mapping-state-badge">Absent</span>
+            <h3>Out of view, with a visual counterpart</h3>
+            <p>A reference image is retrieved by search or generated on the user's own object. Pinching it opens an interactive 3D object for closer inspection or a panoramic view of the described place.</p>
+          </div>
+        </div>
+
+        <div class="mapping-row abstract">
+          <div class="mapping-state">
+            <span class="mapping-state-badge">Abstract</span>
+            <h3>Out of view, no visual counterpart</h3>
+            <p>Unfamiliar terms, precise values, and proper names are pinned as concise keywords that stay visible throughout the narration.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modality-figure fade-in">
+        <h3>Base Modalities</h3>
+        <p class="section-desc">Examples of base modalities for Visible, Absent, and Abstract content in matcha preparation (left) and sightseeing (right).</p>
+        <img class="figure-img" src="./images/Basemodality.png" alt="Base modalities: spatial highlight for Visible, reference image for Absent, keyword for Abstract">
+      </div>
+
+      <div class="modality-figure fade-in">
+        <h3>Extended Modalities</h3>
+        <p class="section-desc">Extended modalities for Visible content (A&ndash;C) and Absent content (D&ndash;F).</p>
+        <img class="figure-img" src="./images/ExtendedModality.png" alt="Extended modalities: 3D arrow and keyword for Visible; 3D object, panoramic view, and keyword for Absent">
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>Anonymous submission &middot; IEEE VR 2027 &middot; For reviewer access only</p>
+    </div>
+  </footer>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    // Intersection Observer for fade-in animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    const youtubePlayerIds = [
+      'main-demo-player',
+      'art-player',
+      'presentation-player',
+      'machine-player',
+      'shopping-player',
+      'matcha-player'
+    ];
+
+    const youtubePlayers = new Map();
+
+    function pauseOtherYoutubePlayers(activePlayer) {
+      youtubePlayers.forEach(player => {
+        if (player === activePlayer || typeof player.pauseVideo !== 'function') {
+          return;
+        }
+
+        const state = typeof player.getPlayerState === 'function'
+          ? player.getPlayerState()
+          : null;
+
+        if (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING) {
+          player.pauseVideo();
+        }
+      });
+    }
+
+    function handleYouTubePlayerReady(event, shouldAutoplay) {
+      event.target.setVolume(100);
+
+      if (shouldAutoplay) {
+        event.target.mute();
+        event.target.playVideo();
+      } else {
+        event.target.unMute();
+      }
+    }
+
+    function handleYouTubePlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        event.target.setVolume(100);
+        pauseOtherYoutubePlayers(event.target);
+      }
+    }
+
+    function onYouTubeIframeAPIReady() {
+      youtubePlayerIds.forEach(id => {
+        const iframe = document.getElementById(id);
+        if (!iframe) return;
+
+        const shouldAutoplay = iframe.dataset.autoplay === 'true';
+        const player = new YT.Player(id, {
+          events: {
+            onReady: event => handleYouTubePlayerReady(event, shouldAutoplay),
+            onStateChange: handleYouTubePlayerStateChange
+          }
+        });
+
+        youtubePlayers.set(id, player);
+      });
+    }
+
+    window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+  </script>
+
+</body>
+</html>
