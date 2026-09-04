@@ -131,12 +131,14 @@
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
     }
 
-    .video-wrapper iframe,
-    .scenario-video iframe {
+    .video-wrapper video,
+    .scenario-video video {
       width: 100%;
       height: 100%;
       display: block;
       border: 0;
+      object-fit: contain;
+      background: #000;
     }
 
     .video-caption {
@@ -421,13 +423,6 @@
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
     }
 
-    .scenario-video video {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-    }
-
     .scenario-info h3 {
       font-size: 1.3rem;
       font-weight: 700;
@@ -549,16 +544,13 @@
   <section class="video-section" style="border-top: none; padding-top: 48px;">
     <div class="container">
       <div class="video-wrapper fade-in">
-        <iframe
+        <video
           id="main-demo-player"
-          class="youtube-embed"
-          data-video-id="sTqTd6ExhLM"
-          data-autoplay="true"
-          src="https://www.youtube.com/embed/sTqTd6ExhLM?enablejsapi=1&playsinline=1&controls=1&rel=0&mute=1&autoplay=1&loop=1&playlist=sTqTd6ExhLM"
+          class="site-video"
+          src="./videos/Vista_Demo.mp4"
           title="System demonstration of Vista"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen>
-        </iframe>
+          controls muted autoplay loop playsinline preload="metadata">
+        </video>
       </div>
       <p class="video-caption video-caption-accent">System demonstration of Vista</p>
     </div>
@@ -578,16 +570,13 @@
         <!-- Scenario 1: Art -->
         <div class="scenario-item fade-in">
           <div class="scenario-video">
-            <iframe
+            <video
               id="art-player"
-              class="youtube-embed"
-              data-video-id="Na4somc-s7w"
-              data-autoplay="false"
-              src="https://www.youtube.com/embed/Na4somc-s7w?enablejsapi=1&playsinline=1&controls=1&rel=0"
+              class="site-video"
+              src="./videos/Vista_Scenario01_Art.mp4"
               title="Art Explanation"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen>
-            </iframe>
+              controls playsinline preload="metadata">
+            </video>
           </div>
           <div class="scenario-info">
             <h3>Art Explanation</h3>
@@ -598,16 +587,13 @@
         <!-- Scenario 2: Presentation -->
         <div class="scenario-item fade-in">
           <div class="scenario-video">
-            <iframe
+            <video
               id="presentation-player"
-              class="youtube-embed"
-              data-video-id="4_dUL9m2Zr0"
-              data-autoplay="false"
-              src="https://www.youtube.com/embed/4_dUL9m2Zr0?enablejsapi=1&playsinline=1&controls=1&rel=0"
+              class="site-video"
+              src="./videos/Vista_Scenario02_Presentation.mp4"
               title="Presentation Q&amp;A"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen>
-            </iframe>
+              controls playsinline preload="metadata">
+            </video>
           </div>
           <div class="scenario-info">
             <h3>Presentation Q&amp;A</h3>
@@ -618,16 +604,13 @@
         <!-- Scenario 3: Machine -->
         <div class="scenario-item fade-in">
           <div class="scenario-video">
-            <iframe
+            <video
               id="machine-player"
-              class="youtube-embed"
-              data-video-id="bkuFP_LZeOw"
-              data-autoplay="false"
-              src="https://www.youtube.com/embed/bkuFP_LZeOw?enablejsapi=1&playsinline=1&controls=1&rel=0"
+              class="site-video"
+              src="./videos/Vista_Scenario03_Machine.mp4"
               title="Machine Setup"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen>
-            </iframe>
+              controls playsinline preload="metadata">
+            </video>
           </div>
           <div class="scenario-info">
             <h3>Machine Setup</h3>
@@ -638,16 +621,13 @@
         <!-- Scenario 4: Shopping -->
         <div class="scenario-item fade-in">
           <div class="scenario-video">
-            <iframe
+            <video
               id="shopping-player"
-              class="youtube-embed"
-              data-video-id="GQIqrTRA5Ss"
-              data-autoplay="false"
-              src="https://www.youtube.com/embed/GQIqrTRA5Ss?enablejsapi=1&playsinline=1&controls=1&rel=0"
+              class="site-video"
+              src="./videos/Vista_Scenario04_Shopping.mp4"
               title="Product Comparison"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen>
-            </iframe>
+              controls playsinline preload="metadata">
+            </video>
           </div>
           <div class="scenario-info">
             <h3>Product Comparison</h3>
@@ -658,16 +638,13 @@
         <!-- Scenario 5: Matcha -->
         <div class="scenario-item fade-in">
           <div class="scenario-video">
-            <iframe
+            <video
               id="matcha-player"
-              class="youtube-embed"
-              data-video-id="PcSLJlKCzuk"
-              data-autoplay="false"
-              src="https://www.youtube.com/embed/PcSLJlKCzuk?enablejsapi=1&playsinline=1&controls=1&rel=0"
+              class="site-video"
+              src="./videos/Vista_Scenario05_Matcha.mp4"
               title="Matcha Brewing"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen>
-            </iframe>
+              controls playsinline preload="metadata">
+            </video>
           </div>
           <div class="scenario-info">
             <h3>Matcha Brewing</h3>
@@ -803,7 +780,6 @@
     </div>
   </footer>
 
-  <script src="https://www.youtube.com/iframe_api"></script>
   <script>
     // Intersection Observer for fade-in animations
     const observer = new IntersectionObserver((entries) => {
@@ -817,69 +793,15 @@
 
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-    const youtubePlayerIds = [
-      'main-demo-player',
-      'art-player',
-      'presentation-player',
-      'machine-player',
-      'shopping-player',
-      'matcha-player'
-    ];
-
-    const youtubePlayers = new Map();
-
-    function pauseOtherYoutubePlayers(activePlayer) {
-      youtubePlayers.forEach(player => {
-        if (player === activePlayer || typeof player.pauseVideo !== 'function') {
-          return;
-        }
-
-        const state = typeof player.getPlayerState === 'function'
-          ? player.getPlayerState()
-          : null;
-
-        if (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING) {
-          player.pauseVideo();
-        }
-      });
-    }
-
-    function handleYouTubePlayerReady(event, shouldAutoplay) {
-      event.target.setVolume(100);
-
-      if (shouldAutoplay) {
-        event.target.mute();
-        event.target.playVideo();
-      } else {
-        event.target.unMute();
-      }
-    }
-
-    function handleYouTubePlayerStateChange(event) {
-      if (event.data === YT.PlayerState.PLAYING) {
-        event.target.setVolume(100);
-        pauseOtherYoutubePlayers(event.target);
-      }
-    }
-
-    function onYouTubeIframeAPIReady() {
-      youtubePlayerIds.forEach(id => {
-        const iframe = document.getElementById(id);
-        if (!iframe) return;
-
-        const shouldAutoplay = iframe.dataset.autoplay === 'true';
-        const player = new YT.Player(id, {
-          events: {
-            onReady: event => handleYouTubePlayerReady(event, shouldAutoplay),
-            onStateChange: handleYouTubePlayerStateChange
-          }
+    // Only one video plays at a time
+    const videos = document.querySelectorAll('video.site-video');
+    videos.forEach(video => {
+      video.addEventListener('play', () => {
+        videos.forEach(other => {
+          if (other !== video && !other.paused) other.pause();
         });
-
-        youtubePlayers.set(id, player);
       });
-    }
-
-    window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+    });
   </script>
 
 </body>
