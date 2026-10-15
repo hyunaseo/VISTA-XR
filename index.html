@@ -87,6 +87,54 @@
       line-height: 1.6;
     }
 
+    .hero-authors {
+      margin-top: 26px;
+      font-size: 1.02rem;
+      line-height: 1.7;
+    }
+
+    .hero-authors .author {
+      color: var(--text);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .hero-authors .author a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .hero-authors .author a:hover {
+      color: var(--accent);
+    }
+
+    .hero-authors sup {
+      font-size: 0.65em;
+      color: var(--text-tertiary);
+      margin-left: 1px;
+    }
+
+    .hero-affil {
+      margin-top: 6px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .bibtex-box {
+      margin-top: 28px;
+      background: #f5f5f7;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      white-space: pre;
+      overflow-x: auto;
+    }
+
     .hero-actions {
       display: flex;
       justify-content: center;
@@ -530,12 +578,21 @@
   <!-- Hero -->
   <section class="hero">
     <div class="container">
-      <div class="hero-badge">IEEE VR 2027 &middot; Under Review</div>
+      <div class="hero-badge">arXiv Preprint &middot; 2026</div>
       <h1>Vista</h1>
       <p class="subtitle">Situated Visual Modality Adaptation<br>for Spoken VLM Responses in XR</p>
+      <div class="hero-authors">
+        <span class="author">HyunA Seo<sup>1</sup></span>,
+        <span class="author">Junhee Kim<sup>1</sup></span>,
+        <span class="author">Seunghyeon Lee<sup>1</sup></span>,
+        <span class="author">Rajesh Balan<sup>2</sup></span>,
+        <span class="author">Youngki Lee<sup>1</sup></span>
+      </div>
+      <p class="hero-affil"><sup>1</sup>Seoul National University &nbsp;&middot;&nbsp; <sup>2</sup>Singapore Management University</p>
       <div class="hero-actions">
-        <a class="hero-link" href="./Vista_IEEEVR2027.pdf" target="_blank" rel="noopener noreferrer">Paper (Under Review)</a>
-        <a class="hero-link" href="./Vista_IEEEVR2027_Supplement.pdf" target="_blank" rel="noopener noreferrer">Supplementary Material</a>
+        <a class="hero-link" href="./Vista_arXiv.pdf" target="_blank" rel="noopener noreferrer">Paper (PDF)</a>
+        <!-- TODO: arXiv 등록 후 ID를 넣고 주석을 해제하세요 -->
+        <!-- <a class="hero-link" href="https://arxiv.org/abs/XXXX.XXXXX" target="_blank" rel="noopener noreferrer">arXiv</a> -->
       </div>
     </div>
   </section>
@@ -773,10 +830,26 @@
     </div>
   </section>
 
+  <!-- Citation -->
+  <section>
+    <div class="container">
+      <h2 class="section-title fade-in">Citation</h2>
+      <div class="bibtex-box fade-in">@misc{seo2026vista,
+  title     = {{VISTA}: Situated Visual Modality Adaptation for Spoken {VLM} Responses in {XR}},
+  author    = {Seo, HyunA and Kim, Junhee and Lee, Seunghyeon and Balan, Rajesh and Lee, Youngki},
+  year      = {2026},
+  eprint    = {XXXX.XXXXX},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.HC},
+  url       = {https://vista-xr.github.io/}
+}</div>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer>
     <div class="container">
-      <p>Anonymous submission &middot; IEEE VR 2027 &middot; For reviewer access only</p>
+      <p>&copy; 2026 Human-Centered Computer Systems Lab, Seoul National University &middot; Contact: <a href="mailto:hyuna.seo@hcs.snu.ac.kr" style="color:inherit;">hyuna.seo@hcs.snu.ac.kr</a></p>
     </div>
   </footer>
 
